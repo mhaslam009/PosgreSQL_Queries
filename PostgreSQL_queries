@@ -1,0 +1,82 @@
+1)To create a DB:
+CREATE DATABASE fastapi
+WITH
+OWNER = postgres
+ENCODING = 'UTF-8'
+LOCALE_PROVIDER = 'libc'
+CONNECTION LIMIT = -1
+IS_TEMPLATE = False;
+
+
+2)To create a tavle:
+SELECT * FROM public.products
+ORDER BY id ASC 
+
+3)To show all the tables
+SELECT * from products;
+
+4)To show features of the table
+SELECT id, name, price from products;
+
+5)To rename column(id, is_sale):
+SELECT id AS product_id,is_sale AS on_sale FROM products;
+
+6)To filter rows:
+6.1:To get specific row of all columns:
+SELECT * FROM products WHERE id = 10;
+6.2:To get specific two or more columns based on sepicfic row
+SELECT id, name FROM products WHERE id = 10;
+6.3:To get all columns based on string value
+SELECT * FROM products WHERE name = 'TV';
+6.4:Filter based on ranges using single operator:
+SELECT * FROM products WHERE price >= 80;
+6.5:Filter based on not operator:
+SELECT * FROM products WHERE inventory != 0;
+OR
+SELECT * FROM products WHERE inventory <> 0;
+6.6:Filtering based on more than one operator to match search criteria:
+SELECT * FROM products WHERE price > 100 OR price < 20;
+SELECT * FROM products WHERE price < 100 AND inventory >0;
+6.7:To filter specific rows only:
+SELECT * FROM products WHERE id IN (1,2,3);
+6.8:Filter rows based on some regular words used among the string(for string Columns):
+SELECT * FROM products WHERE name LIKE 'TV%'; //in name column Letter start with TV
+SELECT * FROM products WHERE name LIKE '%e'; //in name column Letter that endswith e
+SELECT * FROM products WHERE name NOT LIKE '%e'; //in name column, letter that doesnt endwith e
+SELECT * FROM products WHERE name LIKE '%en%'; //in name column letters that has letter en
+
+7:Sorting Criterias;
+7.1: Sort by ascending ORDER
+SELECT * FROM products ORDER BY price ASC;
+7.2:Sort in descending ORDER
+SELECT * FROM products ORDER BY price DESC;
+7.3:Tiebreaker, when u apply sort, many values due be  0 randomly order, 
+now you apply the 2nd criteria to resolve this:
+SELECT * FROM products ORDER BY inventory DESC, price ASC;
+7.4: To check which data created recently:
+SELECT * FROM ORDER BY created_at DESC;
+7.5: applying 7.4 with filtering criteria:
+SELECT * FROM products WHERE price > 20 ORDER BY created_at DESC;
+7.6:Limit the sorted data:
+SELECT * FROM products WHERE price > 10 LIMIT 2;
+7.7:Apllying offset so that only certain data dont comes in:
+SELECT * FROM products ORDER BY id LIMIT 5 OFFSET 2; //5 data points dega har 2 data ko skip krke
+
+8: Creating: Except administration purposes u never use craeting new table, instead u insert new entries on existing table
+8.1:Inserting new entries:
+INSERT INTO products(name, price,inventory) VALUES('tortilla',4,1000); //if return with 0 1 that u entered the netry
+8.2:to return the newly created entry back to user if we follow API Criterias
+INSERT INTO products(name, price, inventory) VALUES('Sausage',7,10) RETURNING *;
+8.3: How to insert more than one entry into our DB:
+INSERT INTO products(name, price, inventory) VALUES('banana',1,90),('apple',1,60),('orange',9,100) RETURNING name,cid, created_at;
+
+9:DELETING
+9.1: Deleting specific entry and return the deleted entry back to user:
+DELETE FROM products WHERE id = 11 RETURNING *;
+
+10:UPDATION:
+10.1: Update a single row and multiple columns:
+UPDATE products SET name = 'flour', price=20 WHERE id=25 RETURNING *;
+10.2: update multiple rows
+UPDATE products SET is_sale = true WHERE id > 15 RETURNING *;
+
